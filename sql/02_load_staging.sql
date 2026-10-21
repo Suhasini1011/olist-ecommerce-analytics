@@ -1,10 +1,13 @@
--- Load the raw Olist CSVs into the staging tables.
--- Run in psql (not DBeaver): psql '<service URI>' -f sql/02_load_staging.sql
--- Run from the project folder. CSVs live in data/raw/ (not in Git; download from Kaggle).
--- Why psql: DBeaver's importer split review comments containing line breaks
+-- Load the raw Olist CSVs into the staging tables (Neon PostgreSQL).
+-- Run from the project folder in psql (not DBeaver):
+--   psql "$NEON_URL" -f sql/02_load_staging.sql
+-- CSVs live in data/raw/ (not in Git; download from Kaggle).
+-- Why psql: DBeaver's CSV importer split review comments containing line breaks
 -- into extra rows (158,240 instead of 99,224). \copy with FORMAT csv handles them correctly.
--- Note: orders, order_items and order_payments were first loaded with DBeaver,
--- which stored blanks as '' instead of NULL. The analytics layer uses NULLIF to handle both.
+-- Each \copy is one transaction: if the connection drops, that table loads nothing,
+-- so it is safe to rerun just that line. Never rerun a line that succeeded (it doubles the rows).
+-- Verified row counts: orders 99,441; order_items 112,650; order_payments 103,886;
+-- order_reviews 99,224; customers 99,441; sellers 3,095; products 32,951; category_translation 71.
 
 \copy staging.orders FROM 'data/raw/olist_orders_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8')
 \copy staging.order_items FROM 'data/raw/olist_order_items_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8')
