@@ -1,0 +1,932 @@
+createOrReplace
+
+	model Model
+		culture: en-US
+		defaultPowerBIDataSourceVersion: powerBI_V3
+		sourceQueryCulture: en-US
+		dataAccessOptions
+			legacyRedirects
+			returnErrorValuesAsNull
+
+		table dim_customer
+			lineageTag: eca1e976-b394-4bff-ae67-ce0d535006ac
+
+			column customer_unique_id
+				dataType: string
+				isNullable: false
+				sourceProviderType: nvarchar(max)
+				lineageTag: b52e3e6e-a21f-4381-93a8-2b304dce7895
+				summarizeBy: none
+				sourceColumn: customer_unique_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column zip_prefix
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: e7beaf1e-25e7-4108-976f-7600e45f2493
+				summarizeBy: none
+				sourceColumn: zip_prefix
+
+				annotation SummarizationSetBy = Automatic
+
+			column city
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 1ef32063-6726-4a42-a522-5f88985d36de
+				summarizeBy: none
+				sourceColumn: city
+
+				annotation SummarizationSetBy = Automatic
+
+			column state
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 7e2ccdd4-0ccd-4cd4-8b9b-a9cc54c16569
+				summarizeBy: none
+				sourceColumn: state
+
+				annotation SummarizationSetBy = Automatic
+
+			partition dim_customer = m
+				mode: directQuery
+				source =
+						let
+						  Source = PostgreSQL.Database("ep-wandering-thunder-b9okdoej.c-7.eu-central-1.aws.neon.tech", "neondb"),
+						  #"Navigation 1" = Source{[Schema = "analytics", Item = "dim_customer"]}[Data]
+						in
+						  #"Navigation 1"
+
+			changedProperty = Name
+
+			annotation PBI_ResultType = Table
+
+		table dim_date
+			lineageTag: 7e19ee2b-61e5-4e0e-9898-8f110cdfcd81
+			dataCategory: Time
+
+			column date_key
+				dataType: dateTime
+				isKey
+				isNullable: false
+				formatString: Long Date
+				sourceProviderType: date
+				lineageTag: da00cb6d-32b0-4782-b962-3f1912ccd605
+				summarizeBy: none
+				sourceColumn: date_key
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation UnderlyingDateTimeDataType = Date
+
+			column year
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: aa6c4188-57ae-4eb7-a438-d2722e9db53f
+				summarizeBy: sum
+				sourceColumn: year
+
+				annotation SummarizationSetBy = Automatic
+
+			column quarter
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: e2c447b6-31ba-4508-b276-916fe902f728
+				summarizeBy: sum
+				sourceColumn: quarter
+
+				annotation SummarizationSetBy = Automatic
+
+			column month
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: 29c4fc43-8054-4c5f-8291-8575f6655778
+				summarizeBy: sum
+				sourceColumn: month
+
+				annotation SummarizationSetBy = Automatic
+
+			column month_name
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 7fe9ff36-660a-40a0-9242-a9a6ae5ef6dc
+				summarizeBy: none
+				sourceColumn: month_name
+
+				annotation SummarizationSetBy = Automatic
+
+			column year_month
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 725e09ae-3a3d-49ef-9a0a-7048c27593b6
+				summarizeBy: none
+				sourceColumn: year_month
+
+				annotation SummarizationSetBy = Automatic
+
+			column day_of_week
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: 9c04fb12-6015-444d-b329-750566524a51
+				summarizeBy: sum
+				sourceColumn: day_of_week
+
+				annotation SummarizationSetBy = Automatic
+
+			column day_name
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 9ddbed33-37cc-4c94-90db-c092f4358f9d
+				summarizeBy: none
+				sourceColumn: day_name
+
+				annotation SummarizationSetBy = Automatic
+
+			column is_weekend
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				sourceProviderType: bit
+				lineageTag: 4fbdd58a-7cd0-4d9b-9f02-f476b3331a9d
+				summarizeBy: none
+				sourceColumn: is_weekend
+
+				annotation SummarizationSetBy = Automatic
+
+			column in_analysis_window
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				sourceProviderType: bit
+				lineageTag: eca25412-9965-4b6a-add0-6ca9d02fd228
+				summarizeBy: none
+				sourceColumn: in_analysis_window
+
+				annotation SummarizationSetBy = Automatic
+
+			partition dim_date = m
+				mode: directQuery
+				source =
+						let
+						  Source = PostgreSQL.Database("ep-wandering-thunder-b9okdoej.c-7.eu-central-1.aws.neon.tech", "neondb"),
+						  #"Navigation 1" = Source{[Schema = "analytics", Item = "dim_date"]}[Data]
+						in
+						  #"Navigation 1"
+
+			changedProperty = Name
+
+			annotation PBI_ResultType = Table
+
+		table dim_product
+			lineageTag: 79627c8a-3402-4a6f-8917-4f1cbb0094fa
+
+			column product_id
+				dataType: string
+				isNullable: false
+				sourceProviderType: nvarchar(max)
+				lineageTag: 2a83fa8d-2137-4058-8ad0-2570eb06b836
+				summarizeBy: none
+				sourceColumn: product_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column category
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: fe7d9e54-648b-4131-ac62-3d172a532c25
+				summarizeBy: none
+				sourceColumn: category
+
+				annotation SummarizationSetBy = Automatic
+
+			column category_portuguese
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 66ee8a7c-bd2d-429a-99b9-c1fffbebb46f
+				summarizeBy: none
+				sourceColumn: category_portuguese
+
+				annotation SummarizationSetBy = Automatic
+
+			column photos_qty
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: 72bd4b12-6a22-4cf9-a09d-6939da832229
+				summarizeBy: none
+				sourceColumn: photos_qty
+
+				annotation SummarizationSetBy = Automatic
+
+			column weight_g
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: 60aaaccd-9fe4-4ef5-aec6-5aba21592dc8
+				summarizeBy: none
+				sourceColumn: weight_g
+
+				annotation SummarizationSetBy = Automatic
+
+			column length_cm
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: e02a5710-6cb3-428e-9b97-98ab3dd73dbf
+				summarizeBy: none
+				sourceColumn: length_cm
+
+				annotation SummarizationSetBy = Automatic
+
+			column height_cm
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: e86ec74b-938b-48b9-a052-9e71265fb09c
+				summarizeBy: none
+				sourceColumn: height_cm
+
+				annotation SummarizationSetBy = Automatic
+
+			column width_cm
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: ce6e4150-3766-44a3-8ea1-0aaa675983c7
+				summarizeBy: none
+				sourceColumn: width_cm
+
+				annotation SummarizationSetBy = Automatic
+
+			column description_length
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: fd242691-e66a-40a8-b395-499f66bd1e0e
+				summarizeBy: none
+				sourceColumn: description_length
+
+				annotation SummarizationSetBy = Automatic
+
+			partition dim_product = m
+				mode: directQuery
+				source =
+						let
+						  Source = PostgreSQL.Database("ep-wandering-thunder-b9okdoej.c-7.eu-central-1.aws.neon.tech", "neondb"),
+						  #"Navigation 1" = Source{[Schema = "analytics", Item = "dim_product"]}[Data]
+						in
+						  #"Navigation 1"
+
+			changedProperty = Name
+
+			annotation PBI_ResultType = Table
+
+		table dim_seller
+			lineageTag: f8f62c8e-56dd-4b83-8e8b-6e48fc933224
+
+			column seller_id
+				dataType: string
+				isNullable: false
+				sourceProviderType: nvarchar(max)
+				lineageTag: f7c35209-e7c1-4b8c-9ede-ad1f6240a729
+				summarizeBy: none
+				sourceColumn: seller_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column zip_prefix
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 73bcc267-17cb-4009-b1e7-61efaf6bb765
+				summarizeBy: none
+				sourceColumn: zip_prefix
+
+				annotation SummarizationSetBy = Automatic
+
+			column city
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 443c5a9f-aac5-4ecb-83d2-16401578de99
+				summarizeBy: none
+				sourceColumn: city
+
+				annotation SummarizationSetBy = Automatic
+
+			column state
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: c98d85c7-e814-4fde-b603-4e23bdee01af
+				summarizeBy: none
+				sourceColumn: state
+
+				annotation SummarizationSetBy = Automatic
+
+			partition dim_seller = m
+				mode: directQuery
+				source =
+						let
+						  Source = PostgreSQL.Database("ep-wandering-thunder-b9okdoej.c-7.eu-central-1.aws.neon.tech", "neondb"),
+						  #"Navigation 1" = Source{[Schema = "analytics", Item = "dim_seller"]}[Data]
+						in
+						  #"Navigation 1"
+
+			changedProperty = Name
+
+			annotation PBI_ResultType = Table
+
+		table fact_order_items
+			lineageTag: ccbbf56a-df2f-4137-aa22-396fba34cf2a
+
+			measure 'Item Revenue' = ```
+					
+					        CALCULATE ( SUM ( fact_order_items[price] ),
+					            KEEPFILTERS ( NOT fact_order_items[order_status] IN { "canceled", "unavailable" } ) )
+					```
+				lineageTag: e87c54e9-5346-4f3b-a8d6-3a86173cf09e
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure Freight = SUM ( fact_order_items[freight_value] )
+				lineageTag: 5902ba05-0dd6-4de7-b50d-90a579208c7f
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Items Sold' = COUNTROWS ( fact_order_items )
+				formatString: 0
+				lineageTag: a2b8495c-5b43-4aa8-82b4-bada4831331b
+
+			measure '% of Total Revenue' = ```
+					
+					        DIVIDE ( [Item Revenue],
+					            CALCULATE ( [Item Revenue], REMOVEFILTERS ( dim_product ), REMOVEFILTERS ( dim_seller ) ) )
+					```
+				lineageTag: bef870e6-f655-42af-ab0f-5a84bc16c2e4
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Revenue PY' = ```
+					
+					        CALCULATE ( [Item Revenue], SAMEPERIODLASTYEAR ( dim_date[date_key] ) )
+					```
+				lineageTag: 57f874e7-8537-415d-ac59-58ac99f7f8b8
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Revenue YoY %' = DIVIDE ( [Item Revenue] - [Revenue PY], [Revenue PY] )
+				lineageTag: 9e5f4a54-b89c-4379-a4df-c4c6919fdcf9
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Revenue Running Total' = ```
+					
+					        VAR MaxDate = MAX ( dim_date[date_key] )
+					        RETURN CALCULATE ( [Item Revenue], FILTER ( ALLSELECTED ( dim_date ), dim_date[date_key] <= MaxDate ) )
+					```
+				lineageTag: f29248d9-1210-407a-9731-530ef35ef395
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column order_id
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 53bcd422-d395-4d85-89a0-e359b1ba002c
+				summarizeBy: none
+				sourceColumn: order_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column order_item_id
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: d5200126-d0f3-48bd-bb9c-d2a9147afb44
+				summarizeBy: sum
+				sourceColumn: order_item_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column product_id
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: a1becd07-c467-4caa-a0dc-9eb40e27455e
+				summarizeBy: none
+				sourceColumn: product_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column seller_id
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 19762c95-df02-4627-96c2-f2357889171e
+				summarizeBy: none
+				sourceColumn: seller_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column customer_unique_id
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: adefae60-e6f9-4430-80e2-7495d1d80c90
+				summarizeBy: none
+				sourceColumn: customer_unique_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column purchase_date
+				dataType: dateTime
+				formatString: Long Date
+				sourceProviderType: date
+				lineageTag: 187ea2af-4fbe-44d4-a428-697aa042d527
+				summarizeBy: none
+				sourceColumn: purchase_date
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation UnderlyingDateTimeDataType = Date
+
+			column order_status
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: f57df6ea-8b47-4204-940b-9da6f21bac70
+				summarizeBy: none
+				sourceColumn: order_status
+
+				annotation SummarizationSetBy = Automatic
+
+			column shipping_limit_ts
+				dataType: dateTime
+				formatString: General Date
+				sourceProviderType: datetime2
+				lineageTag: b4f70618-38a0-40a8-a23f-594005ae0791
+				summarizeBy: none
+				sourceColumn: shipping_limit_ts
+
+				annotation SummarizationSetBy = Automatic
+
+			column price
+				dataType: double
+				sourceProviderType: decimal
+				lineageTag: e67ec7e1-7283-42ed-8519-b4929d4218dd
+				summarizeBy: sum
+				sourceColumn: price
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column freight_value
+				dataType: double
+				sourceProviderType: decimal
+				lineageTag: 9ab05b55-3566-400e-b721-8c193bf12ea6
+				summarizeBy: sum
+				sourceColumn: freight_value
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column review_score
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: fd62fe25-dd39-41ff-a3d7-2a7a13865ffa
+				summarizeBy: sum
+				sourceColumn: review_score
+
+				annotation SummarizationSetBy = Automatic
+
+			column is_late
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				sourceProviderType: bit
+				lineageTag: b117ade3-4033-427b-a746-9d307000487e
+				summarizeBy: none
+				sourceColumn: is_late
+
+				annotation SummarizationSetBy = Automatic
+
+			column in_analysis_window
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				sourceProviderType: bit
+				lineageTag: d0cde2b1-98dc-42c5-a2e0-57b560db6859
+				summarizeBy: none
+				sourceColumn: in_analysis_window
+
+				annotation SummarizationSetBy = Automatic
+
+			partition fact_order_items = m
+				mode: directQuery
+				source =
+						let
+						  Source = PostgreSQL.Database("ep-wandering-thunder-b9okdoej.c-7.eu-central-1.aws.neon.tech", "neondb"),
+						  #"Navigation 1" = Source{[Schema = "analytics", Item = "fact_order_items"]}[Data]
+						in
+						  #"Navigation 1"
+
+			changedProperty = Name
+
+			annotation PBI_ResultType = Table
+
+		table fact_orders
+			lineageTag: 38920bbc-6430-4b0d-9cde-d9ed574c503e
+
+			measure Orders = COUNTROWS ( fact_orders )
+				formatString: 0
+				lineageTag: f465d46f-dfcb-42e5-a429-1841896720ee
+
+			measure 'Delivered Orders' = ```
+					
+					        CALCULATE ( [Orders],
+					            KEEPFILTERS ( fact_orders[order_status] = "delivered" ),
+					            NOT ISBLANK ( fact_orders[delivered_ts] ) )
+					```
+				formatString: 0
+				lineageTag: aa289eed-30d8-41d4-b1ca-f6d97d1e09ac
+
+			measure 'Late Orders' = ```
+					
+					        CALCULATE ( [Delivered Orders], KEEPFILTERS ( fact_orders[is_late] = TRUE () ) )
+					```
+				formatString: 0
+				lineageTag: 3615ac9c-9f43-4afe-8d0b-e0353ba20d8a
+
+			measure '% Late' = DIVIDE ( [Late Orders], [Delivered Orders] )
+				lineageTag: 3d6f9b7d-d198-4109-9c60-d39f9eb7b5e6
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Avg Delivery Days' = ```
+					
+					        CALCULATE ( AVERAGE ( fact_orders[delivery_days] ),
+					            KEEPFILTERS ( fact_orders[order_status] = "delivered" ) )
+					```
+				lineageTag: 4007a27f-a2e0-43d6-81c2-b1db19f462ae
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Reviewed Orders' = COUNT ( fact_orders[review_score] )
+				formatString: 0
+				lineageTag: a658c0c3-a1ae-4ecd-bc7f-2db17ada651d
+
+			measure 'Avg Review Score' = AVERAGE ( fact_orders[review_score] )
+				lineageTag: cd7df329-7923-488a-95fc-80ae0130eff4
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Low Score Orders' = ```
+					
+					        CALCULATE ( [Reviewed Orders], KEEPFILTERS ( fact_orders[review_score] <= 2 ) )
+					```
+				formatString: 0
+				lineageTag: 079bf662-3497-45f9-9aca-6e4060d5a7f9
+
+			measure '% Low Score' = DIVIDE ( [Low Score Orders], [Reviewed Orders] )
+				lineageTag: 094582dc-e8ab-42e7-8c1f-880951190fcc
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Paid Value' = SUM ( fact_orders[payment_value] )
+				lineageTag: 160ccc23-6462-4afb-983c-e4b766b482be
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Lost Sales' = ```
+					
+					        CALCULATE ( [Paid Value],
+					            KEEPFILTERS ( fact_orders[order_status] IN { "canceled", "unavailable" } ) )
+					```
+				lineageTag: d22643d2-db7a-4d12-8aed-749a71fe11fe
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure Customers = ```
+					
+					        CALCULATE ( DISTINCTCOUNT ( fact_orders[customer_unique_id] ),
+					            KEEPFILTERS ( NOT fact_orders[order_status] IN { "canceled", "unavailable" } ) )
+					```
+				formatString: 0
+				lineageTag: a042e3d3-4826-4c34-971f-c379be674a00
+
+			measure 'Repeat Customers' = ```
+					
+					        VAR CustomerDays =
+					            CALCULATETABLE (
+					                ADDCOLUMNS ( VALUES ( fact_orders[customer_unique_id] ),
+					                    "@days", CALCULATE ( DISTINCTCOUNT ( fact_orders[purchase_date] ) ) ),
+					                KEEPFILTERS ( NOT fact_orders[order_status] IN { "canceled", "unavailable" } ) )
+					        RETURN COUNTROWS ( FILTER ( CustomerDays, [@days] > 1 ) )
+					```
+				formatString: 0
+				lineageTag: 62c7d497-f555-4c16-8424-77ada330d397
+
+			measure '% Repeat Customers' = DIVIDE ( [Repeat Customers], [Customers] )
+				lineageTag: 39017534-a3f3-4196-8f03-0d5e864a150e
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			measure 'Orders PY' = CALCULATE ( [Orders], SAMEPERIODLASTYEAR ( dim_date[date_key] ) )
+				formatString: 0
+				lineageTag: 1acb000c-787b-4656-bf90-293c8cc4e265
+
+			measure 'Orders YoY %' = DIVIDE ( [Orders] - [Orders PY], [Orders PY] )
+				lineageTag: f8e37c9b-d9b4-4c74-acd4-820207862f1d
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column order_id
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 8fb7b22c-53fd-467f-8627-9f1c145d7cc9
+				summarizeBy: none
+				sourceColumn: order_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column customer_unique_id
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 1495b162-4439-4462-9287-054ab744a78c
+				summarizeBy: none
+				sourceColumn: customer_unique_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column order_status
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: f6105bb6-be6a-4118-bd7c-a40ef716c55d
+				summarizeBy: none
+				sourceColumn: order_status
+
+				annotation SummarizationSetBy = Automatic
+
+			column purchase_date
+				dataType: dateTime
+				formatString: Long Date
+				sourceProviderType: date
+				lineageTag: 9ae20e0c-32c5-4541-8584-fee5e7eae63c
+				summarizeBy: none
+				sourceColumn: purchase_date
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation UnderlyingDateTimeDataType = Date
+
+			column purchase_ts
+				dataType: dateTime
+				formatString: General Date
+				sourceProviderType: datetime2
+				lineageTag: 33fd140c-0955-4a61-bd61-56e91fd4124f
+				summarizeBy: none
+				sourceColumn: purchase_ts
+
+				annotation SummarizationSetBy = Automatic
+
+			column approved_ts
+				dataType: dateTime
+				formatString: General Date
+				sourceProviderType: datetime2
+				lineageTag: 259f0667-a799-42f0-9ef9-b6300ea105c0
+				summarizeBy: none
+				sourceColumn: approved_ts
+
+				annotation SummarizationSetBy = Automatic
+
+			column carrier_ts
+				dataType: dateTime
+				formatString: General Date
+				sourceProviderType: datetime2
+				lineageTag: 7d90b4ac-dccb-433b-b04e-1767702c77a7
+				summarizeBy: none
+				sourceColumn: carrier_ts
+
+				annotation SummarizationSetBy = Automatic
+
+			column delivered_ts
+				dataType: dateTime
+				formatString: General Date
+				sourceProviderType: datetime2
+				lineageTag: 14c00a21-f8f7-4167-bddf-3ac5f22ee3da
+				summarizeBy: none
+				sourceColumn: delivered_ts
+
+				annotation SummarizationSetBy = Automatic
+
+			column estimated_delivery_date
+				dataType: dateTime
+				formatString: Long Date
+				sourceProviderType: date
+				lineageTag: 68f525e9-161c-44ae-8583-8da1ed146937
+				summarizeBy: none
+				sourceColumn: estimated_delivery_date
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation UnderlyingDateTimeDataType = Date
+
+			column items_count
+				dataType: int64
+				formatString: 0
+				sourceProviderType: bigint
+				lineageTag: ed71855d-2179-4e66-be0d-11b1f9dcc3ee
+				summarizeBy: sum
+				sourceColumn: items_count
+
+				annotation SummarizationSetBy = Automatic
+
+			column sellers_count
+				dataType: int64
+				formatString: 0
+				sourceProviderType: bigint
+				lineageTag: a90b0d2e-9ec5-4d7c-b711-8525deef14d8
+				summarizeBy: sum
+				sourceColumn: sellers_count
+
+				annotation SummarizationSetBy = Automatic
+
+			column items_value
+				dataType: double
+				sourceProviderType: decimal
+				lineageTag: f172f87a-3275-4cab-a729-fc9003facbc2
+				summarizeBy: sum
+				sourceColumn: items_value
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column freight_value
+				dataType: double
+				sourceProviderType: decimal
+				lineageTag: 1fcefdaa-077c-438f-8a20-89ff69080495
+				summarizeBy: sum
+				sourceColumn: freight_value
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column payment_value
+				dataType: double
+				sourceProviderType: decimal
+				lineageTag: 8fe39ed9-ac29-4e2c-993f-9e02217738eb
+				summarizeBy: sum
+				sourceColumn: payment_value
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column max_installments
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: 722e9373-10fc-48f1-80f4-057455341fef
+				summarizeBy: sum
+				sourceColumn: max_installments
+
+				annotation SummarizationSetBy = Automatic
+
+			column main_payment_type
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 46766e4b-d7d5-4fde-9ba9-21950d6b64e0
+				summarizeBy: none
+				sourceColumn: main_payment_type
+
+				annotation SummarizationSetBy = Automatic
+
+			column review_id
+				dataType: string
+				sourceProviderType: nvarchar(max)
+				lineageTag: 7f1f8158-244c-411a-9017-c01a4097819c
+				summarizeBy: none
+				sourceColumn: review_id
+
+				annotation SummarizationSetBy = Automatic
+
+			column review_score
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: 3adfaf66-2777-4b06-94ad-f307c2aa288b
+				summarizeBy: sum
+				sourceColumn: review_score
+
+				annotation SummarizationSetBy = Automatic
+
+			column has_review_comment
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				sourceProviderType: bit
+				lineageTag: d947e9d7-227a-45fb-b072-b727d946d148
+				summarizeBy: none
+				sourceColumn: has_review_comment
+
+				annotation SummarizationSetBy = Automatic
+
+			column delivery_days
+				dataType: double
+				sourceProviderType: decimal
+				lineageTag: c49a40d8-97d6-4d48-a2f9-c7b23f7f41d2
+				summarizeBy: sum
+				sourceColumn: delivery_days
+
+				annotation SummarizationSetBy = Automatic
+
+				annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+			column days_vs_estimate
+				dataType: int64
+				formatString: 0
+				sourceProviderType: int
+				lineageTag: abdc0f55-4870-4947-bceb-b77aeb99294c
+				summarizeBy: sum
+				sourceColumn: days_vs_estimate
+
+				annotation SummarizationSetBy = Automatic
+
+			column is_late
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				sourceProviderType: bit
+				lineageTag: 8f2bf002-f553-44d3-8724-5168daa568f3
+				summarizeBy: none
+				sourceColumn: is_late
+
+				annotation SummarizationSetBy = Automatic
+
+			column has_date_issue
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				sourceProviderType: bit
+				lineageTag: 2836110c-2a93-4b2e-90c6-3b917f95a9f0
+				summarizeBy: none
+				sourceColumn: has_date_issue
+
+				annotation SummarizationSetBy = Automatic
+
+			column purchase_occasion
+				dataType: int64
+				formatString: 0
+				sourceProviderType: bigint
+				lineageTag: 8d60efb0-73f9-4dd9-b058-c84d68b138ef
+				summarizeBy: sum
+				sourceColumn: purchase_occasion
+
+				annotation SummarizationSetBy = Automatic
+
+			column in_analysis_window
+				dataType: boolean
+				formatString: """TRUE"";""TRUE"";""FALSE"""
+				sourceProviderType: bit
+				lineageTag: c2c6520c-3e02-4f1b-889c-f7917190656e
+				summarizeBy: none
+				sourceColumn: in_analysis_window
+
+				annotation SummarizationSetBy = Automatic
+
+			partition fact_orders = m
+				mode: directQuery
+				source =
+						let
+						  Source = PostgreSQL.Database("ep-wandering-thunder-b9okdoej.c-7.eu-central-1.aws.neon.tech", "neondb"),
+						  #"Navigation 1" = Source{[Schema = "analytics", Item = "fact_orders"]}[Data]
+						in
+						  #"Navigation 1"
+
+			changedProperty = Name
+
+		relationship fc4d432a-fa54-98be-d5af-f1edb5e2f4cd
+			fromColumn: fact_orders.customer_unique_id
+			toColumn: dim_customer.customer_unique_id
+
+		relationship f906cfef-1ef6-ae7f-f573-f9bf2102e9b7
+			fromColumn: fact_orders.purchase_date
+			toColumn: dim_date.date_key
+
+		relationship 79137d38-3e51-ac30-7c02-18d8a5560dea
+			fromColumn: fact_order_items.product_id
+			toColumn: dim_product.product_id
+
+		relationship 9216365d-fb4a-8c1b-d85c-a098328e455d
+			fromColumn: fact_order_items.seller_id
+			toColumn: dim_seller.seller_id
+
+		relationship 0dbe5222-0dea-547a-94a2-decc0fc3ff26
+			fromColumn: fact_order_items.purchase_date
+			toColumn: dim_date.date_key
+
+		relationship 0b55fcf7-a144-c027-b6bd-137d8e72a055
+			fromColumn: fact_order_items.customer_unique_id
+			toColumn: dim_customer.customer_unique_id
+
+		annotation __PBI_TimeIntelligenceEnabled = 1
+
+		annotation PBI_QueryOrder = ["dim_customer","dim_date","dim_product","dim_seller","fact_order_items","fact_orders"]
+
+		annotation PBI_ProTooling = ["WebModelingEdit","DaxQueryView_Desktop","TMDLView_Desktop"]
+

@@ -27,3 +27,10 @@ the correct count. psql comes from Postgres.app, because Homebrew no longer supp
 
 All staging columns are TEXT, loaded exactly as in the CSVs. Cleaning and typing happen in the
 analytics layer, so every fix is visible in SQL and the raw data can always be checked.
+
+## 4. Power BI model saved as TMDL instead of .pbix
+
+The semantic model was built in the Power BI Service (browser), because Power BI Desktop needs Windows.
+Exporting it to .pbix failed: "Can't export to Power BI Desktop format". Models created in the service cannot be downloaded as .pbix.
+Instead, the full model definition (tables, relationships, DAX measures) is saved as text from TMDL View
+in `powerbi/model.tmdl`, with screenshots of every report page in `docs/screenshots/`.

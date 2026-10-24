@@ -1,0 +1,76 @@
+DEFINE
+    ---------------- ORDERS (fact_orders) ----------------
+    MEASURE fact_orders[Orders] = COUNTROWS ( fact_orders )
+    MEASURE fact_orders[Delivered Orders] =
+        CALCULATE ( [Orders],
+            KEEPFILTERS ( fact_orders[order_status] = "delivered" ),
+            NOT ISBLANK ( fact_orders[delivered_ts] ) )
+    MEASURE fact_orders[Late Orders] =
+        CALCULATE ( [Delivered Orders], KEEPFILTERS ( fact_orders[is_late] = TRUE () ) )
+    MEASURE fact_orders[% Late] = DIVIDE ( [Late Orders], [Delivered Orders] )
+    MEASURE fact_orders[Avg Delivery Days] =
+        CALCULATE ( AVERAGE ( fact_orders[delivery_days] ),
+            KEEPFILTERS ( fact_orders[order_status] = "delivered" ) )
+
+    ---------------- REVIEWS ----------------
+    MEASURE fact_orders[Reviewed Orders] = COUNT ( fact_orders[review_score] )
+    MEASURE fact_orders[Avg Review Score] = AVERAGE ( fact_orders[review_score] )
+    MEASURE fact_orders[Low Score Orders] =
+        CALCULATE ( [Reviewed Orders], KEEPFILTERS ( fact_orders[review_score] <= 2 ) )
+    MEASURE fact_orders[% Low Score] = DIVIDE ( [Low Score Orders], [Reviewed Orders] )
+
+    ---------------- MONEY ----------------
+    MEASURE fact_orders[Paid Value] = SUM ( fact_orders[payment_value] )
+    MEASURE fact_orders[Lost Sales] =
+        CALCULATE ( [Paid Value],
+            KEEPFILTERS ( fact_orders[order_status] IN { "canceled", "unavailable" } ) )
+
+    ---------------- CUSTOMERS (repeat = bought on 2+ different days) ----------------
+    MEASURE fact_orders[Customers] =
+        CALCULATE ( DISTINCTCOUNT ( fact_orders[customer_unique_id] ),
+            KEEPFILTERS ( NOT fact_orders[order_status] IN { "canceled", "unavailable" } ) )
+    MEASURE fact_orders[Repeat Customers] =
+        VAR CustomerDays =
+            CALCULATETABLE (
+                ADDCOLUMNS ( VALUES ( fact_orders[customer_unique_id] ),
+                    "@days", CALCULATE ( DISTINCTCOUNT ( fact_orders[purchase_date] ) ) ),
+                KEEPFILTERS ( NOT fact_orders[order_status] IN { "canceled", "unavailable" } ) )
+        RETURN COUNTROWS ( FILTER ( CustomerDays, [@days] > 1 ) )
+    MEASURE fact_orders[% Repeat Customers] = DIVIDE ( [Repeat Customers], [Customers] )
+
+    ---------------- TIME INTELLIGENCE (orders) ----------------
+    MEASURE fact_orders[Orders PY] = CALCULATE ( [Orders], SAMEPERIODLASTYEAR ( dim_date[date_key] ) )
+    MEASURE fact_orders[Orders YoY %] = DIVIDE ( [Orders] - [Orders PY], [Orders PY] )
+
+    ---------------- REVENUE (fact_order_items) ----------------
+    MEASURE fact_order_items[Item Revenue] =
+        CALCULATE ( SUM ( fact_order_items[price] ),
+            KEEPFILTERS ( NOT fact_order_items[order_status] IN { "canceled", "unavailable" } ) )
+    MEASURE fact_order_items[Freight] = SUM ( fact_order_items[freight_value] )
+    MEASURE fact_order_items[Items Sold] = COUNTROWS ( fact_order_items )
+    MEASURE fact_order_items[% of Total Revenue] =
+        DIVIDE ( [Item Revenue],
+            CALCULATE ( [Item Revenue], REMOVEFILTERS ( dim_product ), REMOVEFILTERS ( dim_seller ) ) )
+
+    ---------------- TIME INTELLIGENCE (revenue) ----------------
+    MEASURE fact_order_items[Revenue PY] =
+        CALCULATE ( [Item Revenue], SAMEPERIODLASTYEAR ( dim_date[date_key] ) )
+    MEASURE fact_order_items[Revenue YoY %] = DIVIDE ( [Item Revenue] - [Revenue PY], [Revenue PY] )
+    MEASURE fact_order_items[Revenue Running Total] =
+        VAR MaxDate = MAX ( dim_date[date_key] )
+        RETURN CALCULATE ( [Item Revenue], FILTER ( ALLSELECTED ( dim_date ), dim_date[date_key] <= MaxDate ) )
+
+-- VALIDATION: these must match the SQL results from Phase 6
+EVALUATE
+CALCULATETABLE (
+    ROW (
+        "Delivered Orders",  [Delivered Orders],
+        "% Late",            [% Late],
+        "Customers",         [Customers],
+        "Repeat Customers",  [Repeat Customers],
+        "% Repeat",          [% Repeat Customers],
+        "Lost Sales",        [Lost Sales],
+        "% Low Score",       [% Low Score]
+    ),
+    dim_date[in_analysis_window] = TRUE ()
+)
