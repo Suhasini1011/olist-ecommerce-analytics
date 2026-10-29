@@ -175,3 +175,7 @@ SELECT
         AND NOT EXISTS (SELECT 1 FROM staging.category_translation AS t
                          WHERE t.product_category_name = p.product_category_name)) AS categories_no_english,
     (SELECT STRING_AGG(DISTINCT review_score, ', ') FROM staging.order_reviews) AS review_score_values;
+
+-- Finding: 610 products (1.9%) have no category -> labelled 'unknown'.
+-- Finding: 2 categories have no English translation -> use the Portuguese name.
+-- Finding: review scores are only 1-5 (clean).

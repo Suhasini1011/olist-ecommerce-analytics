@@ -29,3 +29,6 @@ Window: Jan 2017 - Aug 2018. Patterns are associations, not proof of cause.
 - Canceled + unavailable: R$257k (~1.6% of paid value); unavailable (stock) alone R$124k.
 - 1,097 orders (R$176k) stuck at 'shipped', never marked delivered: check their age before drawing conclusions.
 - Indirect: late delivery is linked to bad reviews and fewer returning customers, in a business where repeat is already only 2%.
+
+
+YoY looks strong, but the monthly trend shows growth plateaued in 2018.
